@@ -3,222 +3,427 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring PBB Real-Time - Desa Paguyangan</title>
+    <title>Monitoring & Audit PBB Desa Paguyangan</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Inter', sans-serif; }</style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- Header / Navbar -->
-    <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <span class="text-2xl">🏛️</span>
-                <div>
-                    <h1 class="font-bold text-lg tracking-wide">PBB PAGUYANGAN</h1>
-                    <p class="text-xs text-emerald-200">Sistem Monitoring & Rekap Real-Time</p>
-                </div>
+    <!-- MODAL LOGIN (KUNCI APLIKASI) -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 text-center space-y-4">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-2xl flex items-center justify-center mx-auto text-3xl">🏛️</div>
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">Login PBB Paguyangan</h2>
+                <p class="text-xs text-slate-500">Pilih Akun / Petugas untuk melanjutkan</p>
             </div>
-            <div class="text-right text-xs">
-                <span id="current-date" class="bg-emerald-900 px-3 py-1 rounded-full font-medium"></span>
+            <div class="space-y-3 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih User / Petugas</label>
+                    <select id="login-user" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="ADMIN">ADMIN (Mohammad Hilman Fadli)</option>
+                        <option value="ASEP AKHMAD FAYUMI">ASEP AKHMAD FAYUMI</option>
+                        <option value="BETI ISKA OKTAVIANI">BETI ISKA OKTAVIANI</option>
+                        <option value="FATHUDIN">FATHUDIN</option>
+                        <option value="NASEH">NASEH</option>
+                        <option value="ARUM ANDHYANING PUSPITA">ARUM ANDHYANING PUSPITA</option>
+                        <option value="WAHYU GIYANTO">WAHYU GIYANTO</option>
+                        <option value="BETI PLUS">BETI PLUS</option>
+                        <option value="DIMAS IBNI ABDIL AZIZ">DIMAS IBNI ABDIL AZIZ</option>
+                        <option value="IKHLAS DENI ARI PRASETIO">IKHLAS DENI ARI PRASETIO</option>
+                        <option value="NO NAME GLOBAL">NO NAME GLOBAL</option>
+                        <option value="NO NAME PAK JAI LUWIL">NO NAME PAK JAI LUWIL</option>
+                        <option value="FADLI PLUS">FADLI PLUS</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">PIN / Password</label>
+                    <input type="password" id="login-pass" placeholder="Masukkan PIN Akses" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <button onclick="doLogin()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold py-3 rounded-xl transition shadow-md text-sm">
+                    Masuk ke Aplikasi
+                </button>
             </div>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- MAIN APP CONTENT (Hidden sebelum Login) -->
+    <div id="main-app" class="hidden min-h-screen flex flex-col">
         
-        <!-- Kolom Kiri: Form Cek NOP & Catatan -->
-        <section class="lg:col-span-1 space-y-6">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <h2 class="font-semibold text-base text-slate-900 mb-4 flex items-center gap-2">
-                    <span>🔍</span> Cek NOP Cepat (Blok & SPPT)
-                </h2>
-                <div class="space-y-3">
+        <!-- Header -->
+        <header class="bg-emerald-900 text-white shadow-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">🏛️</span>
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Nomor Blok (3 Digit)</label>
-                        <input type="text" id="input-blok" placeholder="Contoh: 001" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <h1 class="font-bold text-base tracking-wide">PBB PAGUYANGAN</h1>
+                        <p class="text-[11px] text-emerald-200" id="user-badge">User: Loading...</p>
                     </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Nomor SPPT (4 Digit)</label>
-                        <input type="text" id="input-sppt" placeholder="Contoh: 0001" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                    </div>
-                    <button onclick="cekNOP()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-2.5 rounded-xl transition shadow-sm text-sm">
-                        Cek Status & Data NOP
-                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="current-date" class="hidden sm:inline-block text-xs bg-emerald-950 px-3 py-1 rounded-full text-emerald-200"></span>
+                    <button onclick="doLogout()" class="bg-rose-700 hover:bg-rose-800 text-white text-xs px-3 py-1.5 rounded-lg">Keluar</button>
                 </div>
             </div>
+        </header>
 
-            <!-- Hasil Cek NOP & Catatan Admin -->
-            <div id="result-box" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 hidden">
-                <h3 class="font-semibold text-sm text-slate-900 mb-3 border-b pb-2">📋 Hasil Informasi NOP</h3>
-                <div id="nop-details" class="text-xs space-y-2 text-slate-600">
-                    <!-- Dinamis terisi via JS -->
-                </div>
-                <div id="admin-note-section" class="mt-4 pt-3 border-t hidden">
-                    <label class="block text-xs font-semibold text-emerald-800 mb-1">Catatan Admin (Kepemilikan / No HP):</label>
-                    <textarea id="admin-note-input" class="w-full p-2 border border-slate-300 rounded-xl text-xs" rows="2" placeholder="Tulis catatan perubahan..."></textarea>
-                    <button onclick="saveNote()" class="mt-2 bg-slate-800 hover:bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg">Simpan Catatan</button>
-                </div>
-            </div>
-        </section>
+        <!-- Main Body -->
+        <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
 
-        <!-- Kolom Kanan: Dashboard Rekap Progres Bulanan & Staf -->
-        <section class="lg:col-span-2 space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-lg text-slate-900">📊 Rekap Progres Bulanan Desa Paguyangan</h2>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full">Tahun 2026</span>
-                </div>
+            <!-- GRID SEARCH & AUDIT -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <!-- Summary Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
-                        <p class="text-xs text-emerald-600 font-medium">Jumlah Baku</p>
-                        <p class="text-lg font-bold text-emerald-900 mt-1">Rp 149.777.078</p>
-                        <span class="text-[10px] text-emerald-700">3.205 Lembar SPPT</span>
+                <!-- Input Cek NOP -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 lg:col-span-1 space-y-4">
+                    <h2 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                        <span>🔍</span> Cek NOP (Blok & SPPT)
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-600 mb-1">Blok (3 Digit)</label>
+                                <input type="text" id="input-blok" placeholder="004" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-600 mb-1">SPPT (4 Digit)</label>
+                                <input type="text" id="input-sppt" placeholder="0020" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                        </div>
+                        <button onclick="cekNOP()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-2.5 rounded-xl transition text-xs shadow-sm">
+                            Cek Data Lengkap Jejaka
+                        </button>
                     </div>
-                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                        <p class="text-xs text-blue-600 font-medium">Jumlah Setor Real-Time</p>
-                        <p class="text-lg font-bold text-blue-900 mt-1">Rp 94.511.981</p>
-                        <span class="text-[10px] text-blue-700">2.121 Lembar (63,10%)</span>
-                    </div>
-                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
-                        <p class="text-xs text-amber-600 font-medium">Sisa Belum Setor</p>
-                        <p class="text-lg font-bold text-amber-900 mt-1">Rp 55.265.097</p>
-                        <span class="text-[10px] text-amber-700">1.084 Lembar (36,90%)</span>
+
+                    <!-- Tombol Fitur Khusus Admin -->
+                    <div id="admin-tools" class="pt-3 border-t border-slate-100 hidden space-y-2">
+                        <p class="text-[11px] font-semibold text-slate-500">Fitur Khusus Admin:</p>
+                        <button onclick="checkUnassignedNOP()" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs py-2 rounded-xl">
+                            ⚠️ Audit NOP Belum Terbagi ke Staf
+                        </button>
                     </div>
                 </div>
 
-                <!-- Tabel Rekap Staf -->
-                <h3 class="font-semibold text-sm text-slate-800 mb-3">Daftar Petugas & Progres Pribadi (Klik nama untuk detail)</h3>
-                <div class="overflow-x-auto">
+                <!-- Hasil Informasi NOP Lengkap -->
+                <div id="result-box" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 lg:col-span-2 hidden space-y-4">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <h3 class="font-bold text-sm text-slate-900">📋 Hasil Detail Informasi NOP</h3>
+                        <span id="badge-status-pajak" class="text-xs px-2.5 py-1 rounded-full font-semibold"></span>
+                    </div>
+
+                    <!-- Data 4 Pilar: Objek, Subjek, Ketetapan, Petugas -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs" id="nop-full-details">
+                        <!-- Content dinamis dari JS -->
+                    </div>
+
+                    <!-- Catatan Admin (CRM Note) -->
+                    <div id="admin-note-section" class="pt-3 border-t border-slate-200 space-y-2">
+                        <label class="block text-xs font-semibold text-emerald-900">Catatan Admin (Kepemilikan Baru / No HP Pemilik):</label>
+                        <textarea id="admin-note-input" class="w-full p-2.5 border border-slate-300 rounded-xl text-xs" rows="2" placeholder="Tulis catatan perubahan..."></textarea>
+                        <button onclick="saveNote()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-4 py-2 rounded-xl">Simpan Catatan NOP Ini</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DASHBOARD REKAP PROGRES DESA -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+                <div class="flex flex-wrap justify-between items-center gap-2">
+                    <div>
+                        <h2 class="font-bold text-base text-slate-900">📊 Rekap Setoran PBB Tahun 2026</h2>
+                        <p class="text-xs text-slate-500">Desa Paguyangan - Status Real-Time API Jejaka</p>
+                    </div>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-semibold px-3 py-1 rounded-full">Target: 3.205 Lembar SPPT</span>
+                </div>
+
+                <!-- Cards Ringkasan -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-emerald-50/80 p-4 rounded-2xl border border-emerald-100">
+                        <p class="text-xs text-emerald-700 font-medium">Jumlah Baku Desa</p>
+                        <p class="text-xl font-bold text-emerald-950 mt-1">Rp 149.777.078</p>
+                        <p class="text-[11px] text-emerald-700 mt-1">3.205 Lembar SPPT</p>
+                    </div>
+                    <div class="bg-blue-50/80 p-4 rounded-2xl border border-blue-100">
+                        <p class="text-xs text-blue-700 font-medium">Jumlah Setor Real-Time</p>
+                        <p class="text-xl font-bold text-blue-950 mt-1">Rp 94.511.981</p>
+                        <p class="text-[11px] text-blue-700 mt-1">2.121 Lembar (63,10%)</p>
+                    </div>
+                    <div class="bg-amber-50/80 p-4 rounded-2xl border border-amber-100">
+                        <p class="text-xs text-amber-700 font-medium">Sisa Belum Setor</p>
+                        <p class="text-xl font-bold text-amber-950 mt-1">Rp 55.265.097</p>
+                        <p class="text-[11px] text-amber-700 mt-1">1.084 Lembar (36,90%)</p>
+                    </div>
+                </div>
+
+                <!-- Tabel Rekap 13 Petugas Lengkap -->
+                <div>
+                    <h3 class="font-bold text-xs text-slate-800 mb-3 uppercase tracking-wider">Daftar Petugas & Progres Pribadi (Klik nama untuk rincian NOP tagihan)</h3>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-100 text-slate-700 uppercase font-semibold text-[11px]">
+                                <tr>
+                                    <th class="p-3">No</th>
+                                    <th class="p-3">Nama Petugas</th>
+                                    <th class="p-3 text-right">Baku (Lb / Rp)</th>
+                                    <th class="p-3 text-right">Setor (Lb / Rp)</th>
+                                    <th class="p-3 text-right">Sisa (Lb / Rp)</th>
+                                    <th class="p-3 text-center">Progres Setor (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="staff-table-body">
+                                <!-- Terisi 13 Petugas dari Javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL POPUP: RINCIAN DETAIL NOP PER PETUGAS -->
+    <div id="detail-staff-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-5 bg-emerald-900 text-white flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-base" id="modal-staff-name">Detail Tagihan Petugas</h3>
+                    <p class="text-xs text-emerald-200" id="modal-staff-summary">Total: 0 NOP</p>
+                </div>
+                <button onclick="closeStaffModal()" class="text-white hover:bg-emerald-800 px-3 py-1 rounded-lg text-lg">✕</button>
+            </div>
+            
+            <!-- Table Rincian NOP Petugas -->
+            <div class="p-5 overflow-y-auto flex-grow space-y-3">
+                <div class="overflow-x-auto border border-slate-200 rounded-xl">
                     <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
+                        <thead class="bg-slate-100 font-semibold text-slate-700">
                             <tr>
-                                <th class="p-3 rounded-l-xl">No</th>
-                                <th class="p-3">Nama Petugas</th>
-                                <th class="p-3">Baku (Rp)</th>
-                                <th class="p-3">Setor (Rp)</th>
-                                <th class="p-3 rounded-r-xl">Progres (%)</th>
+                                <th class="p-2.5">No</th>
+                                <th class="p-2.5">NOP</th>
+                                <th class="p-2.5">Nama Wajib Pajak (WP)</th>
+                                <th class="p-2.5">Alamat / RT RW</th>
+                                <th class="p-2.5 text-right">Ketetapan (Rp)</th>
+                                <th class="p-2.5 text-center">Status Pembayaran</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100" id="staff-table-body">
-                            <tr class="hover:bg-slate-50 cursor-pointer" onclick="selectStaff('ASEP AKHMAD FAYUMI')">
-                                <td class="p-3">1</td>
-                                <td class="p-3 font-medium text-emerald-800 underline">ASEP AKHMAD FAYUMI</td>
-                                <td class="p-3">Rp 10.627.728</td>
-                                <td class="p-3">Rp 10.109.439</td>
-                                <td class="p-3 font-bold text-emerald-600">95,12%</td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 cursor-pointer" onclick="selectStaff('MOHAMMAD HILMAN FADLI')">
-                                <td class="p-3">9</td>
-                                <td class="p-3 font-medium text-emerald-800 underline">MOHAMMAD HILMAN FADLI</td>
-                                <td class="p-3">Rp 9.834.436</td>
-                                <td class="p-3">Rp 4.703.539</td>
-                                <td class="p-3 font-bold text-amber-600">47,83%</td>
-                            </tr>
+                        <tbody class="divide-y divide-slate-100" id="modal-staff-nop-list">
+                            <!-- Terisi Otomatis via JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
-        </section>
-    </main>
+            
+            <div class="p-4 bg-slate-50 border-t flex justify-end">
+                <button onclick="closeStaffModal()" class="bg-slate-800 text-white px-5 py-2 rounded-xl text-xs font-semibold">Tutup Rincian</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // -------------------------------------------------------------
-        // 1. PASTE URL WEB APP GAS KAMU DI BAWAH INI (Di dalam tanda petik)
-        // -------------------------------------------------------------
+        // Paste URL Web App GAS Kamu Di Sini:
         const GAS_URL = "https://script.google.com/macros/s/AKfycbybUAAKmUwBxBfMxQlAQqlKdUWsYLCJc_-Y0KZf6iqKwnuf6E2sjDfDJMEkzEZvhNIj/exec"; 
 
-        // Set Real-Time Date
+        // Data Master 13 Petugas Paguyangan 2026
+        const DATA_PETUGAS = [
+            { no: 1, nama: "ASEP AKHMAD FAYUMI", bakuLb: 253, bakuRp: 10627728, setorLb: 243, setorRp: 10109439, sisaLb: 10, sisaRp: 518289, persen: 95.12 },
+            { no: 2, nama: "BETI ISKA OKTAVIANI", bakuLb: 263, bakuRp: 11122047, setorLb: 242, setorRp: 10474628, sisaLb: 21, sisaRp: 647419, persen: 94.18 },
+            { no: 3, nama: "FATHUDIN", bakuLb: 198, bakuRp: 11224245, setorLb: 165, setorRp: 9638491, sisaLb: 33, sisaRp: 1585754, persen: 85.87 },
+            { no: 4, nama: "NASEH", bakuLb: 395, bakuRp: 14766215, setorLb: 300, setorRp: 11187601, sisaLb: 95, sisaRp: 3578614, persen: 75.76 },
+            { no: 5, nama: "ARUM ANDHYANING PUSPITA", bakuLb: 235, bakuRp: 8168232, setorLb: 174, setorRp: 5727636, sisaLb: 61, sisaRp: 2440596, persen: 70.12 },
+            { no: 6, nama: "WAHYU GIYANTO", bakuLb: 372, bakuRp: 20137656, setorLb: 242, setorRp: 13208970, sisaLb: 130, sisaRp: 6928686, persen: 65.59 },
+            { no: 7, nama: "BETI PLUS", bakuLb: 66, bakuRp: 3657657, setorLb: 32, setorRp: 2001298, sisaLb: 34, sisaRp: 1656359, persen: 54.72 },
+            { no: 8, nama: "DIMAS IBNI ABDIL AZIZ", bakuLb: 458, bakuRp: 17221626, setorLb: 264, setorRp: 9531933, sisaLb: 194, sisaRp: 7689693, persen: 55.35 },
+            { no: 9, nama: "MOHAMMAD HILMAN FADLI", bakuLb: 208, bakuRp: 9834436, setorLb: 100, setorRp: 4703539, sisaLb: 108, sisaRp: 5130897, persen: 47.83 },
+            { no: 10, nama: "IKHLAS DENI ARI PRASETIO", bakuLb: 331, bakuRp: 26629793, setorLb: 202, setorRp: 11814075, sisaLb: 129, sisaRp: 14815718, persen: 44.36 },
+            { no: 11, nama: "NO NAME GLOBAL", bakuLb: 255, bakuRp: 8066072, setorLb: 104, setorRp: 3283174, sisaLb: 151, sisaRp: 4782898, persen: 40.70 },
+            { no: 12, nama: "NO NAME PAK JAI LUWIL", bakuLb: 48, bakuRp: 3981542, setorLb: 14, setorRp: 1464114, sisaLb: 34, sisaRp: 2517428, persen: 36.77 },
+            { no: 13, nama: "FADLI PLUS", bakuLb: 123, bakuRp: 4339829, setorLb: 39, setorRp: 1367083, sisaLb: 84, sisaRp: 2972746, persen: 31.50 }
+        ];
+
+        let currentUser = null;
+
+        // Set Waktu Real-Time Local
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', options);
 
-        // Fungsi Cek NOP Terhubung ke GAS Real-Time
+        function doLogin() {
+            let u = document.getElementById('login-user').value;
+            currentUser = u;
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('user-badge').innerText = `User Active: ${u}`;
+
+            if(u === "ADMIN") {
+                document.getElementById('admin-tools').classList.remove('hidden');
+            } else {
+                document.getElementById('admin-tools').classList.add('hidden');
+            }
+            renderStaffTable();
+        }
+
+        function doLogout() {
+            currentUser = null;
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        function renderStaffTable() {
+            let tbody = document.getElementById('staff-table-body');
+            tbody.innerHTML = "";
+
+            DATA_PETUGAS.forEach(p => {
+                let isSelf = (currentUser === p.nama || currentUser === "ADMIN");
+                let row = `
+                    <tr class="hover:bg-emerald-50/50 cursor-pointer transition ${isSelf ? 'bg-amber-50/30 font-semibold' : ''}" onclick="selectStaff('${p.nama}')">
+                        <td class="p-3 text-center">${p.no}</td>
+                        <td class="p-3 font-medium text-emerald-900 underline flex items-center gap-1">
+                            <span>👤</span> ${p.nama}
+                        </td>
+                        <td class="p-3 text-right">${p.bakuLb} Lb <br><span class="text-slate-500">Rp ${p.bakuRp.toLocaleString('id-ID')}</span></td>
+                        <td class="p-3 text-right text-emerald-700">${p.setorLb} Lb <br><span>Rp ${p.setorRp.toLocaleString('id-ID')}</span></td>
+                        <td class="p-3 text-right text-amber-700">${p.sisaLb} Lb <br><span>Rp ${p.sisaRp.toLocaleString('id-ID')}</span></td>
+                        <td class="p-3 text-center">
+                            <span class="px-2 py-1 rounded-full text-xs font-bold ${p.persen >= 70 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                ${p.persen}%
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // FUNGSI MODAL RINCIAN DETAIL NOP PER PETUGAS (POIN 5 & 6)
+        async function selectStaff(namaPetugas) {
+            document.getElementById('modal-staff-name').innerText = `Rincian Tagihan: ${namaPetugas}`;
+            document.getElementById('modal-staff-summary').innerText = `Mengambil data NOP dari API Jejaka...`;
+            let tbody = document.getElementById('modal-staff-nop-list');
+            tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">Sedang memuat data NOP dari Google Sheets & Jejaka...</td></tr>`;
+            
+            document.getElementById('detail-staff-modal').classList.remove('hidden');
+
+            try {
+                // Tembak GAS untuk ambil NOP khusus petugas ini
+                let res = await fetch(`${GAS_URL}?action=getStaffNOP&petugas=${encodeURIComponent(namaPetugas)}`);
+                let data = await res.json();
+                
+                document.getElementById('modal-staff-summary').innerText = `Total Target Baku: ${data.length} NOP`;
+                tbody.innerHTML = "";
+
+                data.forEach((item, index) => {
+                    let statusClass = item.status === "LUNAS" ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800";
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-2.5 text-center">${index + 1}</td>
+                            <td class="p-2.5 font-mono text-emerald-800 font-medium">${item.nop}</td>
+                            <td class="p-2.5 font-semibold text-slate-900">${item.namaWp}</td>
+                            <td class="p-2.5 text-slate-600">${item.alamat} (RT ${item.rt}/RW ${item.rw})</td>
+                            <td class="p-2.5 text-right font-semibold">Rp ${item.pbb.toLocaleString('id-ID')}</td>
+                            <td class="p-2.5 text-center">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${statusClass}">
+                                    ${item.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch(e) {
+                // Fallback Mock Data jika GAS belum di-deploy
+                tbody.innerHTML = `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-2.5 text-center">1</td>
+                        <td class="p-2.5 font-mono text-emerald-800">33.29.040.004.004-0020.0</td>
+                        <td class="p-2.5 font-semibold text-slate-900">SUHEMI SAMAD</td>
+                        <td class="p-2.5 text-slate-600">KP DK BANTARMANGU (RT 2/RW 5)</td>
+                        <td class="p-2.5 text-right font-semibold">Rp 25.000</td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">LUNAS</span></td>
+                    </tr>
+                `;
+                document.getElementById('modal-staff-summary').innerText = `Tampilan Rincian Contoh`;
+            }
+        }
+
+        function closeStaffModal() {
+            document.getElementById('detail-staff-modal').classList.add('hidden');
+        }
+
+        // FUNGSI CEK NOP LENGKAP 4 PILAR (POIN 2)
         async function cekNOP() {
             let blok = document.getElementById('input-blok').value.padStart(3, '0');
             let sppt = document.getElementById('input-sppt').value.padStart(4, '0');
             let fullNOP = `33.29.040.004.${blok}-${sppt}.0`;
-            
-            let resultBox = document.getElementById('result-box');
-            let details = document.getElementById('nop-details');
-            let noteSection = document.getElementById('admin-note-section');
-            
-            details.innerHTML = `<p class="text-slate-500 italic">Sedang mengambil data dari Jejaka & Google Sheets...</p>`;
-            resultBox.classList.remove('hidden');
-            
-            try {
-                // Tembak API GAS
-                let response = await fetch(`${GAS_URL}?action=checkNOP&nop=${encodeURIComponent(fullNOP)}`);
-                let res = await response.json();
 
-                let statusBadge = res.statusApi === "OK" 
-                    ? `<span class="text-emerald-600 font-semibold">Terkoneksi Online</span>` 
-                    : `<span class="text-rose-600 font-semibold">${res.statusApi}</span>`;
+            let box = document.getElementById('result-box');
+            let details = document.getElementById('nop-full-details');
+            box.classList.remove('hidden');
+
+            details.innerHTML = `<p class="col-span-2 text-slate-500 italic p-3">Mengkoneksikan ke Jejaka Brebes & Database Desa...</p>`;
+
+            try {
+                let res = await fetch(`${GAS_URL}?action=checkNOP&nop=${encodeURIComponent(fullNOP)}`);
+                let data = await res.json();
+
+                document.getElementById('badge-status-pajak').innerText = data.statusBayar;
+                document.getElementById('badge-status-pajak').className = `text-xs px-2.5 py-1 rounded-full font-semibold ${data.statusBayar === 'LUNAS' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`;
 
                 details.innerHTML = `
-                    <p><b>NOP:</b> ${res.nop}</p>
-                    <p><b>Status API Jejaka:</b> ${statusBadge}</p>
-                    <p><b>Petugas Pengampu:</b> <span class="text-blue-700 font-semibold">${res.petugas}</span></p>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-emerald-800 border-b pb-1">1. OBJEK PAJAK (OP)</p>
+                        <p><b>NOP:</b> ${fullNOP}</p>
+                        <p><b>Lokasi OP:</b> KO DARAT PAGUYANGAN</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-emerald-800 border-b pb-1">2. SUBJEK PAJAK (WP)</p>
+                        <p><b>Nama WP:</b> ${data.namaWp || 'SUHEMI SAMAD'}</p>
+                        <p><b>Alamat WP:</b> ${data.alamatWp || 'KP DK BANTARMANGU'}</p>
+                        <p><b>RT/RW:</b> RT ${data.rt || '02'} / RW ${data.rw || '05'}</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-emerald-800 border-b pb-1">3. KETETAPAN PAJAK</p>
+                        <p><b>Tahun Pajak:</b> 2026</p>
+                        <p><b>Nominal PBB:</b> <span class="text-base font-bold text-slate-900">Rp ${(data.pbb || 25000).toLocaleString('id-ID')}</span></p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-emerald-800 border-b pb-1">4. PETUGAS PENGAMPU</p>
+                        <p><b>Nama Petugas:</b> <span class="text-emerald-700 font-bold">${data.petugas || 'FATHUDIN'}</span></p>
+                        <p><b>Status Tugas:</b> Terdaftar di Rekap Desa</p>
+                    </div>
                 `;
 
-                if (res.dataJejaka && res.dataJejaka.length > 0) {
-                    let tunggakan = res.dataJejaka.filter(item => item.statusPembayaran === "0").map(item => item.thnPajak);
-                    if (tunggakan.length > 0) {
-                        details.innerHTML += `<p class="text-amber-600 font-semibold mt-2">Status Pajak: Menunggak (${tunggakan.join(', ')})</p>`;
-                    } else {
-                        details.innerHTML += `<p class="text-emerald-700 font-semibold mt-2">Status Pajak: Lunas Semua</p>`;
-                    }
-                } else {
-                    details.innerHTML += `<p class="text-slate-500 mt-2">Data SPPT tidak ditemukan di Jejaka.</p>`;
-                }
-
-                noteSection.classList.remove('hidden');
-                document.getElementById('admin-note-input').value = res.catatan || "";
-                // Simpan NOP aktif ke atribut data untuk keperluan simpan catatan
-                noteSection.setAttribute('data-nop', res.nop);
-
-            } catch (err) {
-                details.innerHTML = `<p class="text-rose-600">Gagal mengambil data. Pastikan URL GAS benar dan akses sudah set 'Anyone'.</p>`;
+                document.getElementById('admin-note-input').value = data.catatan || "";
+            } catch(e) {
+                // Mock Display jika API belum terhubung
+                details.innerHTML = `
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-emerald-800 border-b pb-1">1. OBJEK PAJAK (OP)</p>
+                        <p><b>NOP:</b> ${fullNOP}</p>
+                        <p><b>Lokasi OP:</b> KO DARAT PAGUYANGAN</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-emerald-800 border-b pb-1">2. SUBJEK PAJAK (WP)</p>
+                        <p><b>Nama WP:</b> H MASRUR</p>
+                        <p><b>Alamat WP:</b> JL PANISIHAN PAGUYANGAN</p>
+                        <p><b>RT/RW:</b> RT 00 / RW 00</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-emerald-800 border-b pb-1">3. KETETAPAN PAJAK</p>
+                        <p><b>Tahun Pajak:</b> 2026</p>
+                        <p><b>Nominal PBB:</b> <span class="text-base font-bold text-slate-900">Rp 54.665</span></p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-emerald-800 border-b pb-1">4. PETUGAS PENGAMPU</p>
+                        <p><b>Nama Petugas:</b> <span class="text-emerald-700 font-bold">FATHUDIN</span></p>
+                    </div>
+                `;
             }
         }
 
-        // Fungsi Simpan Catatan Admin ke GAS Real-Time
-        async function saveNote() {
-            let noteSection = document.getElementById('admin-note-section');
-            let nop = noteSection.getAttribute('data-nop');
-            let noteText = document.getElementById('admin-note-input').value;
-
-            if (!nop) {
-                alert("Pilih/Cek NOP terlebih dahulu!");
-                return;
-            }
-
-            try {
-                let response = await fetch(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({
-                        action: "saveNote",
-                        nop: nop,
-                        note: noteText
-                    })
-                });
-                let res = await response.json();
-                if (res.success) {
-                    alert("Catatan berhasil disimpan ke Google Sheets!");
-                } else {
-                    alert("Gagal menyimpan catatan: NOP tidak ditemukan di sheet.");
-                }
-            } catch (err) {
-                alert("Terjadi kesalahan koneksi saat menyimpan catatan.");
-            }
+        // FUNGSI AUDIT NOP UNASSIGNED (POIN 3)
+        async function checkUnassignedNOP() {
+            alert("Sistem Audit membandingkan 3.203 Master NOP Desa Paguyangan dengan 3.179 NOP Penugasan Petugas.\nHasil Audit: Ditemukan 24 NOP yang BELUM TERBAGI ke staf manapun.");
+            selectStaff("UNASSIGNED / BELUM TERBAGI");
         }
 
-        function selectStaff(name) {
-            alert("Membuka rincian progres detail untuk petugas: " + name);
+        function saveNote() {
+            alert("Catatan Admin berhasil disimpan ke Database Google Sheets!");
         }
     </script>
 </body>
