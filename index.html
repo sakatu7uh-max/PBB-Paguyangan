@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi PBB Desa Paguyangan</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Inter', sans-serif; }</style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
 
     <!-- MODAL LOGIN -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 text-center space-y-4">
-            <div class="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-2xl flex items-center justify-center mx-auto text-3xl">🏛️</div>
+    <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl text-center space-y-4">
+            <div class="w-16 h-16 bg-green-100 text-green-800 rounded-2xl flex items-center justify-center mx-auto text-3xl font-bold">🏛️</div>
             <div>
-                <h2 class="text-xl font-bold text-slate-900">Login PBB Paguyangan</h2>
-                <p class="text-xs text-slate-500">Pilih akun Anda untuk masuk ke sistem</p>
+                <h2 class="text-xl font-bold text-gray-900">Login PBB Paguyangan</h2>
+                <p class="text-xs text-gray-500 mt-1">Pilih akun Anda untuk masuk ke sistem</p>
             </div>
             <div class="space-y-3 text-left">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Masuk Sebagai:</label>
-                    <select id="login-user" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm bg-slate-50">
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Masuk Sebagai:</label>
+                    <select id="login-user" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600">
                         <option value="ADMIN">ADMIN (Mohammad Hilman Fadli)</option>
                         <option value="ARUM ANDHYANING PUSPITA">ARUM ANDHYANING PUSPITA</option>
                         <option value="ASEP AKHMAD FAYUMI">ASEP AKHMAD FAYUMI</option>
@@ -38,7 +38,7 @@
                         <option value="WAHYU GIYANTO">WAHYU GIYANTO</option>
                     </select>
                 </div>
-                <button onclick="doLogin()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold py-3 rounded-xl transition shadow-md text-sm">
+                <button onclick="doLogin()" class="w-full bg-green-800 hover:bg-green-900 text-white font-semibold py-3 rounded-xl transition shadow-md text-sm">
                     Masuk Aplikasi
                 </button>
             </div>
@@ -47,58 +47,57 @@
 
     <!-- MAIN APP -->
     <div id="main-app" class="hidden min-h-screen flex flex-col">
-        <header class="bg-emerald-900 text-white shadow-md sticky top-0 z-40">
+        <header class="bg-green-900 text-white shadow-md sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
                     <span class="text-2xl">🏛️</span>
                     <div>
                         <h1 class="font-bold text-base tracking-wide">PBB PAGUYANGAN</h1>
-                        <p class="text-[11px] text-emerald-200" id="user-badge"></p>
+                        <p class="text-xs text-green-200" id="user-badge"></p>
                     </div>
                 </div>
-                <button onclick="doLogout()" class="bg-rose-700 hover:bg-rose-800 text-white text-xs px-3 py-1.5 rounded-lg font-medium">Keluar</button>
+                <button onclick="doLogout()" class="bg-red-700 hover:bg-red-800 text-white text-xs px-3 py-1.5 rounded-lg font-medium">Keluar</button>
             </div>
         </header>
 
         <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
-            
-            <!-- PANEL ADMIN (Cek NOP) -->
+            <!-- PANEL ADMIN -->
             <div id="admin-view-panel" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                    <h2 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+                    <h2 class="font-bold text-sm text-gray-900 flex items-center gap-2">
                         <span>🔍</span> Cek NOP (Blok & SPPT)
                     </h2>
                     <div class="space-y-3">
                         <div class="grid grid-cols-2 gap-2">
                             <div>
-                                <label class="block text-[11px] font-medium text-slate-600 mb-1">Blok (3 Digit)</label>
-                                <input type="text" id="input-blok" placeholder="004" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm">
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Blok (3 Digit)</label>
+                                <input type="text" id="input-blok" placeholder="004" class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-medium text-slate-600 mb-1">SPPT (4 Digit)</label>
-                                <input type="text" id="input-sppt" placeholder="0020" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm">
+                                <label class="block text-xs font-medium text-gray-600 mb-1">SPPT (4 Digit)</label>
+                                <input type="text" id="input-sppt" placeholder="0020" class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm">
                             </div>
                         </div>
-                        <button onclick="cekNOP()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-2 rounded-xl text-xs">Cek Detail Jejaka</button>
+                        <button onclick="cekNOP()" class="w-full bg-green-700 hover:bg-green-800 text-white font-medium py-2 rounded-xl text-xs">Cek Detail Jejaka</button>
                     </div>
                 </div>
 
-                <div id="result-box" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 lg:col-span-2 hidden space-y-3">
-                    <h3 class="font-bold text-sm text-slate-900 border-b pb-2">📋 Hasil Informasi NOP</h3>
+                <div id="result-box" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 lg:col-span-2 hidden space-y-3">
+                    <h3 class="font-bold text-sm text-gray-900 border-b pb-2">📋 Hasil Informasi NOP</h3>
                     <div id="nop-full-details" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs"></div>
                 </div>
             </div>
 
             <!-- DASHBOARD REKAP -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-5">
                 <div>
-                    <h2 class="font-bold text-base text-slate-900" id="dashboard-title">📊 Rekap Tagihan PBB Desa Paguyangan 2026</h2>
-                    <p class="text-xs text-slate-500">Klik Nama Petugas untuk Membuka Rincian NOP Tagihan Asli</p>
+                    <h2 class="font-bold text-base text-gray-900" id="dashboard-title">📊 Rekap Tagihan PBB Desa Paguyangan 2026</h2>
+                    <p class="text-xs text-gray-500 mt-1">Klik Nama Petugas untuk Membuka Rincian NOP Tagihan, Total Rupiah, serta Status Lunas & Belum Lunas</p>
                 </div>
 
-                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                <div class="overflow-x-auto rounded-xl border border-gray-200">
                     <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-100 text-slate-700 uppercase font-semibold text-[11px]">
+                        <thead class="bg-gray-100 text-gray-700 uppercase font-semibold">
                             <tr>
                                 <th class="p-3">No</th>
                                 <th class="p-3">Nama Petugas</th>
@@ -106,48 +105,66 @@
                                 <th class="p-3 text-right">Jumlah Baku (Rp)</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100" id="staff-table-body"></tbody>
+                        <tbody class="divide-y divide-gray-200" id="staff-table-body"></tbody>
                     </table>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- MODAL RINCIAN NOP -->
-    <div id="detail-staff-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-            <div class="p-5 bg-emerald-900 text-white flex justify-between items-center">
+    <!-- MODAL RINCIAN NOP LENGKAP -->
+    <div id="detail-staff-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-5 bg-green-900 text-white flex justify-between items-center">
                 <div>
-                    <h3 class="font-bold text-base" id="modal-staff-name">Rincian Tagihan</h3>
-                    <p class="text-xs text-emerald-200" id="modal-staff-summary">Memuat data...</p>
+                    <h3 class="font-bold text-base" id="modal-staff-name">Rincian Tagihan Petugas</h3>
+                    <p class="text-xs text-green-200" id="modal-staff-summary">Memuat data...</p>
                 </div>
-                <button onclick="closeStaffModal()" class="text-white hover:bg-emerald-800 px-3 py-1 rounded-lg text-lg">✕</button>
+                <button onclick="closeStaffModal()" class="text-white hover:bg-green-800 px-3 py-1 rounded-lg text-lg font-bold">✕</button>
             </div>
             
+            <!-- KARTU RINGKASAN DI DALAM MODAL (Lunas vs Belum Lunas) -->
+            <div class="p-5 bg-gray-50 border-b grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                    <p class="text-blue-700 font-medium">Total Tagihan Baku</p>
+                    <p class="text-sm font-bold text-blue-950 mt-1" id="summary-total">Rp 0 (0 Lb)</p>
+                </div>
+                <div class="bg-green-50 p-3 rounded-xl border border-green-100">
+                    <p class="text-green-700 font-medium">Sudah Lunas</p>
+                    <p class="text-sm font-bold text-green-950 mt-1" id="summary-lunas">Rp 0 (0 Lb)</p>
+                </div>
+                <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
+                    <p class="text-amber-700 font-medium">Belum Lunas / Menunggak</p>
+                    <p class="text-sm font-bold text-amber-950 mt-1" id="summary-belum">Rp 0 (0 Lb)</p>
+                </div>
+            </div>
+
+            <!-- TABEL DAFTAR SEMUA NOP -->
             <div class="p-5 overflow-y-auto flex-grow">
-                <table class="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden">
-                    <thead class="bg-slate-100 font-semibold text-slate-700">
+                <table class="w-full text-left text-xs border border-gray-200 rounded-xl overflow-hidden">
+                    <thead class="bg-gray-100 font-semibold text-gray-700">
                         <tr>
                             <th class="p-2.5">No</th>
                             <th class="p-2.5">NOP</th>
                             <th class="p-2.5">Nama Wajib Pajak (WP)</th>
                             <th class="p-2.5">Alamat</th>
                             <th class="p-2.5 text-right">Ketetapan (Rp)</th>
+                            <th class="p-2.5 text-center">Status Pembayaran</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100" id="modal-staff-nop-list"></tbody>
+                    <tbody class="divide-y divide-gray-200" id="modal-staff-nop-list"></tbody>
                 </table>
             </div>
-            <div class="p-4 bg-slate-50 border-t flex justify-end">
-                <button onclick="closeStaffModal()" class="bg-slate-800 text-white px-5 py-2 rounded-xl text-xs font-semibold">Tutup</button>
+
+            <div class="p-4 bg-gray-50 border-t flex justify-end">
+                <button onclick="closeStaffModal()" class="bg-gray-800 text-white px-5 py-2 rounded-xl text-xs font-semibold">Tutup</button>
             </div>
         </div>
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycby3nAelJxfIQJF-DrukSU0DRTyaDfdVOfDcT9khuOsuImHpLGcKpd9y_sn0FmObCD90/exec"; // Ganti dengan URL GAS kamu
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbw3sh7k0pZEuEZdiyiGEW2Huo5xkoUksTDQ5__g2N4eVgW5PtGJCzn0NWvLwhWlSSaR/exec"; // Ganti dengan URL GAS kamu
 
-        // Data Baku Riil dari Excel yang kamu upload
         const DATA_PETUGAS = [
             { no: 1, nama: "ARUM ANDHYANING PUSPITA", lb: 156, bakuRp: 4723269 },
             { no: 2, nama: "ASEP AKHMAD FAYUMI", lb: 254, bakuRp: 10755581 },
@@ -190,11 +207,11 @@
             tbody.innerHTML = "";
             dataList.forEach((p, idx) => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-emerald-50 cursor-pointer transition" onclick="selectStaff('${p.nama}')">
-                        <td class="p-3 text-center">${idx + 1}</td>
-                        <td class="p-3 font-medium text-emerald-900 underline">👤 ${p.nama}</td>
+                    <tr class="hover:bg-green-50 cursor-pointer transition" onclick="selectStaff('${p.nama}')">
+                        <td class="p-3 text-center font-medium">${idx + 1}</td>
+                        <td class="p-3 font-semibold text-green-900 underline">👤 ${p.nama}</td>
                         <td class="p-3 text-center font-semibold">${p.lb} Lb</td>
-                        <td class="p-3 text-right font-bold text-slate-800">Rp ${p.bakuRp.toLocaleString('id-ID')}</td>
+                        <td class="p-3 text-right font-bold text-gray-900">Rp ${p.bakuRp.toLocaleString('id-ID')}</td>
                     </tr>
                 `;
             });
@@ -202,31 +219,59 @@
 
         async function selectStaff(namaPetugas) {
             document.getElementById('modal-staff-name').innerText = `Rincian Tagihan: ${namaPetugas}`;
-            document.getElementById('modal-staff-summary').innerText = `Menarik daftar NOP dari Google Sheets...`;
+            document.getElementById('modal-staff-summary').innerText = `Menarik semua data NOP dari Google Sheets...`;
             let tbody = document.getElementById('modal-staff-nop-list');
-            tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Memuat NOP...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500 italic">Memuat seluruh NOP petugas...</td></tr>`;
             document.getElementById('detail-staff-modal').classList.remove('hidden');
 
             try {
                 let res = await fetch(`${GAS_URL}?action=getStaffNOP&petugas=${encodeURIComponent(namaPetugas)}`);
                 let data = await res.json();
                 
-                document.getElementById('modal-staff-summary').innerText = `Total Target: ${data.length} NOP`;
-                tbody.innerHTML = "";
+                if (!data || data.length === 0) throw new Error("Kosong");
 
+                let totalRp = 0, lunasRp = 0, belumRp = 0;
+                let lunasCount = 0, belumCount = 0;
+
+                tbody.innerHTML = "";
                 data.forEach((item, index) => {
+                    let pbb = Number(item.pbb) || 0;
+                    totalRp += pbb;
+                    
+                    // Simulasi status atau dari API Jejaka
+                    let isLunas = item.status === "LUNAS";
+                    if (isLunas) {
+                        lunasRp += pbb;
+                        lunasCount++;
+                    } else {
+                        belumRp += pbb;
+                        belumCount++;
+                    }
+
+                    let badgeStatus = isLunas 
+                        ? `<span class="px-2 py-1 bg-green-100 text-green-800 font-bold rounded-full text-[10px]">LUNAS</span>` 
+                        : `<span class="px-2 py-1 bg-amber-100 text-amber-800 font-bold rounded-full text-[10px]">BELUM LUNAS</span>`;
+
                     tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50">
+                        <tr class="hover:bg-gray-50">
                             <td class="p-2.5 text-center">${index + 1}</td>
-                            <td class="p-2.5 font-mono text-emerald-800 font-semibold">${item.nop}</td>
-                            <td class="p-2.5 font-semibold text-slate-900">${item.namaWp}</td>
-                            <td class="p-2.5 text-slate-600">${item.alamat}</td>
-                            <td class="p-2.5 text-right font-semibold">Rp ${Number(item.pbb).toLocaleString('id-ID')}</td>
+                            <td class="p-2.5 font-mono text-green-800 font-semibold">${item.nop}</td>
+                            <td class="p-2.5 font-semibold text-gray-900">${item.namaWp}</td>
+                            <td class="p-2.5 text-gray-600">${item.alamat}</td>
+                            <td class="p-2.5 text-right font-semibold">Rp ${pbb.toLocaleString('id-ID')}</td>
+                            <td class="p-2.5 text-center">${badgeStatus}</td>
                         </tr>
                     `;
                 });
+
+                // Update Ringkasan Total di Header Modal
+                document.getElementById('modal-staff-summary').innerText = `Total Target: ${data.length} NOP`;
+                document.getElementById('summary-total').innerText = `Rp ${totalRp.toLocaleString('id-ID')} (${data.length} Lb)`;
+                document.getElementById('summary-lunas').innerText = `Rp ${lunasRp.toLocaleString('id-ID')} (${lunasCount} Lb)`;
+                document.getElementById('summary-belum').innerText = `Rp ${belumRp.toLocaleString('id-ID')} (${belumCount} Lb)`;
+
             } catch(e) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-rose-600">Gagal memuat data. Periksa URL GAS.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-600">Gagal mengambil data dari Google Sheets. Pastikan URL GAS sudah benar.</td></tr>`;
             }
         }
 
@@ -241,17 +286,17 @@
             let box = document.getElementById('result-box');
             let details = document.getElementById('nop-full-details');
             box.classList.remove('hidden');
-            details.innerHTML = `<p class="col-span-2 text-slate-500 italic">Mengecek data NOP...</p>`;
+            details.innerHTML = `<p class="col-span-2 text-gray-500 italic">Mengecek data NOP...</p>`;
 
             try {
                 let res = await fetch(`${GAS_URL}?action=checkNOP&nop=${encodeURIComponent(fullNOP)}`);
                 let data = await res.json();
                 details.innerHTML = `
-                    <div class="bg-slate-50 p-3 rounded-xl border"><p><b>NOP:</b> ${fullNOP}</p><p><b>Nama WP:</b> ${data.namaWp}</p></div>
-                    <div class="bg-slate-50 p-3 rounded-xl border"><p><b>Ketetapan:</b> Rp ${Number(data.pbb).toLocaleString('id-ID')}</p><p><b>Status:</b> ${data.statusBayar}</p></div>
+                    <div class="bg-gray-50 p-3 rounded-xl border"><p><b>NOP:</b> ${fullNOP}</p><p><b>Nama WP:</b> ${data.namaWp}</p></div>
+                    <div class="bg-gray-50 p-3 rounded-xl border"><p><b>Ketetapan:</b> Rp ${Number(data.pbb).toLocaleString('id-ID')}</p><p><b>Status:</b> ${data.statusBayar}</p></div>
                 `;
             } catch(e) {
-                details.innerHTML = `<p class="text-rose-600">Gagal mengambil data Jejaka.</p>`;
+                details.innerHTML = `<p class="text-red-600">Gagal mengambil data Jejaka.</p>`;
             }
         }
     </script>
