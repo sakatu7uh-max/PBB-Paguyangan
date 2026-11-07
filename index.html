@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring & Audit PBB Desa Paguyangan</title>
+    <title>Aplikasi PBB Desa Paguyangan</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Inter', sans-serif; }</style>
@@ -11,35 +11,35 @@
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
 
     <!-- MODAL LOGIN -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 text-center space-y-4">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-2xl flex items-center justify-center mx-auto text-3xl">🏛️</div>
             <div>
                 <h2 class="text-xl font-bold text-slate-900">Login PBB Paguyangan</h2>
-                <p class="text-xs text-slate-500">Pilih Akun / Petugas untuk melanjutkan</p>
+                <p class="text-xs text-slate-500">Pilih akun Anda untuk masuk ke sistem</p>
             </div>
             <div class="space-y-3 text-left">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih User / Petugas</label>
-                    <select id="login-user" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Masuk Sebagai:</label>
+                    <select id="login-user" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm bg-slate-50">
                         <option value="ADMIN">ADMIN (Mohammad Hilman Fadli)</option>
+                        <option value="ARUM ANDHYANING PUSPITA">ARUM ANDHYANING PUSPITA</option>
                         <option value="ASEP AKHMAD FAYUMI">ASEP AKHMAD FAYUMI</option>
                         <option value="BETI ISKA OKTAVIANI">BETI ISKA OKTAVIANI</option>
-                        <option value="FATHUDIN">FATHUDIN</option>
-                        <option value="NASEH">NASEH</option>
-                        <option value="ARUM ANDHYANING PUSPITA">ARUM ANDHYANING PUSPITA</option>
-                        <option value="WAHYU GIYANTO">WAHYU GIYANTO</option>
                         <option value="BETI PLUS">BETI PLUS</option>
                         <option value="DIMAS IBNI ABDIL AZIZ">DIMAS IBNI ABDIL AZIZ</option>
-                        <option value="MOHAMMAD HILMAN FADLI">MOHAMMAD HILMAN FADLI</option>
-                        <option value="IKHLAS DENI ARI PRASETIO">IKHLAS DENI ARI PRASETIO</option>
-                        <option value="NO NAME GLOBAL">NO NAME GLOBAL</option>
-                        <option value="NO NAME PAK JAI LUWIL">NO NAME PAK JAI LUWIL</option>
                         <option value="FADLI PLUS">FADLI PLUS</option>
+                        <option value="FATHUDIN">FATHUDIN</option>
+                        <option value="IKHLAS DENI ARI PRASETIO">IKHLAS DENI ARI PRASETIO</option>
+                        <option value="JAINURI">JAINURI</option>
+                        <option value="M HILMAN FADLI">M HILMAN FADLI</option>
+                        <option value="NN / TAK BERTUAN">NN / TAK BERTUAN</option>
+                        <option value="NASEH">NASEH</option>
+                        <option value="WAHYU GIYANTO">WAHYU GIYANTO</option>
                     </select>
                 </div>
                 <button onclick="doLogin()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold py-3 rounded-xl transition shadow-md text-sm">
-                    Masuk ke Aplikasi
+                    Masuk Aplikasi
                 </button>
             </div>
         </div>
@@ -56,30 +56,54 @@
                         <p class="text-[11px] text-emerald-200" id="user-badge"></p>
                     </div>
                 </div>
-                <button onclick="doLogout()" class="bg-rose-700 hover:bg-rose-800 text-white text-xs px-3 py-1.5 rounded-lg">Keluar</button>
+                <button onclick="doLogout()" class="bg-rose-700 hover:bg-rose-800 text-white text-xs px-3 py-1.5 rounded-lg font-medium">Keluar</button>
             </div>
         </header>
 
         <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
-            <!-- DASHBOARD REKAP -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="font-bold text-base text-slate-900">📊 Rekap Setoran PBB Tahun 2026</h2>
-                        <p class="text-xs text-slate-500">Desa Paguyangan - Klik Nama Petugas untuk Membuka Rincian NOP</p>
+            
+            <!-- PANEL ADMIN (Cek NOP) -->
+            <div id="admin-view-panel" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                    <h2 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                        <span>🔍</span> Cek NOP (Blok & SPPT)
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-600 mb-1">Blok (3 Digit)</label>
+                                <input type="text" id="input-blok" placeholder="004" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-600 mb-1">SPPT (4 Digit)</label>
+                                <input type="text" id="input-sppt" placeholder="0020" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm">
+                            </div>
+                        </div>
+                        <button onclick="cekNOP()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-2 rounded-xl text-xs">Cek Detail Jejaka</button>
                     </div>
                 </div>
 
-                <!-- Tabel 13 Petugas -->
+                <div id="result-box" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 lg:col-span-2 hidden space-y-3">
+                    <h3 class="font-bold text-sm text-slate-900 border-b pb-2">📋 Hasil Informasi NOP</h3>
+                    <div id="nop-full-details" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs"></div>
+                </div>
+            </div>
+
+            <!-- DASHBOARD REKAP -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+                <div>
+                    <h2 class="font-bold text-base text-slate-900" id="dashboard-title">📊 Rekap Tagihan PBB Desa Paguyangan 2026</h2>
+                    <p class="text-xs text-slate-500">Klik Nama Petugas untuk Membuka Rincian NOP Tagihan Asli</p>
+                </div>
+
                 <div class="overflow-x-auto rounded-xl border border-slate-200">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase font-semibold text-[11px]">
                             <tr>
                                 <th class="p-3">No</th>
                                 <th class="p-3">Nama Petugas</th>
-                                <th class="p-3 text-right">Baku (Rp)</th>
-                                <th class="p-3 text-right">Setor (Rp)</th>
-                                <th class="p-3 text-center">Progres (%)</th>
+                                <th class="p-3 text-center">Jumlah Lembar (Lb)</th>
+                                <th class="p-3 text-right">Jumlah Baku (Rp)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100" id="staff-table-body"></tbody>
@@ -89,7 +113,7 @@
         </main>
     </div>
 
-    <!-- MODAL RINCIAN NOP PETUGAS -->
+    <!-- MODAL RINCIAN NOP -->
     <div id="detail-staff-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
             <div class="p-5 bg-emerald-900 text-white flex justify-between items-center">
@@ -121,22 +145,23 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycby3q7y1lkHTLxx7ZPiaQJLdx8a_hB_yc5SkSxldiZX0AtyMwKdkTS9_gauaUjMLE8fD/exec"; // Ganti dengan URL GAS kamu
+        const GAS_URL = "https://script.google.com/macros/s/AKfycby3nAelJxfIQJF-DrukSU0DRTyaDfdVOfDcT9khuOsuImHpLGcKpd9y_sn0FmObCD90/exec"; // Ganti dengan URL GAS kamu
 
+        // Data Baku Riil dari Excel yang kamu upload
         const DATA_PETUGAS = [
-            { no: 1, nama: "ASEP AKHMAD FAYUMI", bakuRp: 10627728, setorRp: 10109439, persen: 95.12 },
-            { no: 2, nama: "BETI ISKA OKTAVIANI", bakuRp: 11122047, setorRp: 10474628, persen: 94.18 },
-            { no: 3, nama: "FATHUDIN", bakuRp: 11224245, setorRp: 9638491, persen: 85.87 },
-            { no: 4, nama: "NASEH", bakuRp: 14766215, setorRp: 11187601, persen: 75.76 },
-            { no: 5, nama: "ARUM ANDHYANING PUSPITA", bakuRp: 8168232, setorRp: 5727636, persen: 70.12 },
-            { no: 6, nama: "WAHYU GIYANTO", bakuRp: 20137656, setorRp: 13208970, persen: 65.59 },
-            { no: 7, nama: "BETI PLUS", bakuRp: 3657657, setorRp: 2001298, persen: 54.72 },
-            { no: 8, nama: "DIMAS IBNI ABDIL AZIZ", bakuRp: 17221626, setorRp: 9531933, persen: 55.35 },
-            { no: 9, nama: "MOHAMMAD HILMAN FADLI", bakuRp: 9834436, setorRp: 4703539, persen: 47.83 },
-            { no: 10, nama: "IKHLAS DENI ARI PRASETIO", bakuRp: 26629793, setorRp: 11814075, persen: 44.36 },
-            { no: 11, nama: "NO NAME GLOBAL", bakuRp: 8066072, setorRp: 3283174, persen: 40.70 },
-            { no: 12, nama: "NO NAME PAK JAI LUWIL", bakuRp: 3981542, setorRp: 1464114, persen: 36.77 },
-            { no: 13, nama: "FADLI PLUS", bakuRp: 4339829, setorRp: 1367083, persen: 31.50 }
+            { no: 1, nama: "ARUM ANDHYANING PUSPITA", lb: 156, bakuRp: 4723269 },
+            { no: 2, nama: "ASEP AKHMAD FAYUMI", lb: 254, bakuRp: 10755581 },
+            { no: 3, nama: "BETI ISKA OKTAVIANI", lb: 263, bakuRp: 11122047 },
+            { no: 4, nama: "BETI PLUS", lb: 66, bakuRp: 3657657 },
+            { no: 5, nama: "DIMAS IBNI ABDIL AZIZ", lb: 458, bakuRp: 17221626 },
+            { no: 6, nama: "FADLI PLUS", lb: 122, bakuRp: 4306745 },
+            { no: 7, nama: "FATHUDIN", lb: 195, bakuRp: 11283491 },
+            { no: 8, nama: "IKHLAS DENI ARI PRASETIO", lb: 332, bakuRp: 26814878 },
+            { no: 9, nama: "JAINURI", lb: 48, bakuRp: 3981542 },
+            { no: 10, nama: "M HILMAN FADLI", lb: 304, bakuRp: 13912916 },
+            { no: 11, nama: "NN / TAK BERTUAN", lb: 212, bakuRp: 6098611 },
+            { no: 12, nama: "NASEH", lb: 395, bakuRp: 14766215 },
+            { no: 13, nama: "WAHYU GIYANTO", lb: 372, bakuRp: 20137656 }
         ];
 
         function doLogin() {
@@ -144,7 +169,15 @@
             document.getElementById('login-modal').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
             document.getElementById('user-badge').innerText = `Active User: ${u}`;
-            renderStaffTable();
+
+            if(u === "ADMIN") {
+                document.getElementById('admin-view-panel').classList.remove('hidden');
+                renderStaffTable(DATA_PETUGAS);
+            } else {
+                document.getElementById('admin-view-panel').classList.add('hidden');
+                let filtered = DATA_PETUGAS.filter(p => p.nama === u);
+                renderStaffTable(filtered.length > 0 ? filtered : DATA_PETUGAS);
+            }
         }
 
         function doLogout() {
@@ -152,17 +185,16 @@
             document.getElementById('login-modal').classList.remove('hidden');
         }
 
-        function renderStaffTable() {
+        function renderStaffTable(dataList) {
             let tbody = document.getElementById('staff-table-body');
             tbody.innerHTML = "";
-            DATA_PETUGAS.forEach(p => {
+            dataList.forEach((p, idx) => {
                 tbody.innerHTML += `
                     <tr class="hover:bg-emerald-50 cursor-pointer transition" onclick="selectStaff('${p.nama}')">
-                        <td class="p-3 text-center">${p.no}</td>
+                        <td class="p-3 text-center">${idx + 1}</td>
                         <td class="p-3 font-medium text-emerald-900 underline">👤 ${p.nama}</td>
-                        <td class="p-3 text-right">Rp ${p.bakuRp.toLocaleString('id-ID')}</td>
-                        <td class="p-3 text-right text-emerald-700">Rp ${p.setorRp.toLocaleString('id-ID')}</td>
-                        <td class="p-3 text-center font-bold text-emerald-600">${p.persen}%</td>
+                        <td class="p-3 text-center font-semibold">${p.lb} Lb</td>
+                        <td class="p-3 text-right font-bold text-slate-800">Rp ${p.bakuRp.toLocaleString('id-ID')}</td>
                     </tr>
                 `;
             });
@@ -170,10 +202,9 @@
 
         async function selectStaff(namaPetugas) {
             document.getElementById('modal-staff-name').innerText = `Rincian Tagihan: ${namaPetugas}`;
-            document.getElementById('modal-staff-summary').innerText = `Menghubungkan ke Google Sheets & Jejaka...`;
+            document.getElementById('modal-staff-summary').innerText = `Menarik daftar NOP dari Google Sheets...`;
             let tbody = document.getElementById('modal-staff-nop-list');
-            tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sedang menarik data NOP...</td></tr>`;
-            
+            tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Memuat NOP...</td></tr>`;
             document.getElementById('detail-staff-modal').classList.remove('hidden');
 
             try {
@@ -195,12 +226,33 @@
                     `;
                 });
             } catch(e) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-rose-600">Gagal memuat data dari server. Periksa URL GAS.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-rose-600">Gagal memuat data. Periksa URL GAS.</td></tr>`;
             }
         }
 
         function closeStaffModal() {
             document.getElementById('detail-staff-modal').classList.add('hidden');
+        }
+
+        async function cekNOP() {
+            let blok = document.getElementById('input-blok').value.padStart(3, '0');
+            let sppt = document.getElementById('input-sppt').value.padStart(4, '0');
+            let fullNOP = `33.29.040.004.${blok}-${sppt}.0`;
+            let box = document.getElementById('result-box');
+            let details = document.getElementById('nop-full-details');
+            box.classList.remove('hidden');
+            details.innerHTML = `<p class="col-span-2 text-slate-500 italic">Mengecek data NOP...</p>`;
+
+            try {
+                let res = await fetch(`${GAS_URL}?action=checkNOP&nop=${encodeURIComponent(fullNOP)}`);
+                let data = await res.json();
+                details.innerHTML = `
+                    <div class="bg-slate-50 p-3 rounded-xl border"><p><b>NOP:</b> ${fullNOP}</p><p><b>Nama WP:</b> ${data.namaWp}</p></div>
+                    <div class="bg-slate-50 p-3 rounded-xl border"><p><b>Ketetapan:</b> Rp ${Number(data.pbb).toLocaleString('id-ID')}</p><p><b>Status:</b> ${data.statusBayar}</p></div>
+                `;
+            } catch(e) {
+                details.innerHTML = `<p class="text-rose-600">Gagal mengambil data Jejaka.</p>`;
+            }
         }
     </script>
 </body>
